@@ -2,6 +2,7 @@
   <div id="app">
     <main>
       <panel headline="Puntenboeker">
+
         <settings
           v-if="settings.show"
           v-bind:points="settings.pointsPerDay"
@@ -50,6 +51,25 @@ export default {
       this.settings.extraPoints = data.extra;
       this.settings.cheatDay = data.cheat;
       this.settings.show = false;
+
+      localStorage.settings_pointsPerDay = data.points;
+      localStorage.settings_extraPoints = data.extra;
+      localStorage.settings_cheatDay = data.cheat;
+      localStorage.settings_show = 'no';
+    }
+  },
+  mounted() {
+    if (localStorage.settings_pointsPerDay) {
+      this.settings.pointsPerDay = localStorage.settings_pointsPerDay;
+    }
+    if (localStorage.settings_extraPoints) {
+      this.settings.extraPoints = localStorage.settings_extraPoints;
+    }
+    if (localStorage.settings_cheatDay) {
+      this.settings.cheatDay = localStorage.settings_cheatDay;
+    }
+    if (localStorage.settings_show) {
+      this.settings.show = localStorage.settings_show == 'yes';
     }
   }
 }

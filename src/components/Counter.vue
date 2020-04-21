@@ -102,6 +102,32 @@ export default {
     }
   },
   methods: {
+    storeToCache: function() {
+        localStorage.counter_week = this.cache.week;
+        localStorage.counter_extra = this.cache.extra;
+        localStorage.counter_day1 = this.cache.days[1];
+        localStorage.counter_day2 = this.cache.days[2];
+        localStorage.counter_day3 = this.cache.days[3];
+        localStorage.counter_day4 = this.cache.days[4];
+        localStorage.counter_day5 = this.cache.days[5];
+        localStorage.counter_day6 = this.cache.days[6];
+        localStorage.counter_day7 = this.cache.days[7];
+    },
+    restoreFromCache: function() {
+        if (localStorage.counter_week) {
+            this.cache.week = localStorage.counter_week;
+            this.cache.extra = localStorage.counter_extra;
+            this.cache.days = {
+                1: localStorage.counter_day1,
+                2: localStorage.counter_day2,
+                3: localStorage.counter_day3,
+                4: localStorage.counter_day4,
+                5: localStorage.counter_day5,
+                6: localStorage.counter_day6,
+                7: localStorage.counter_day7
+            };
+        }
+    },
     addPoint: function() {
         var date = this.selectedDate();
         this.buildCache(date);
@@ -113,9 +139,14 @@ export default {
         }
         this.cache.days[day] -= 1;
         this.update_count += 1; // to trigger update
+
+        this.storeToCache();
     },
     buildCache(date) {
         var week = this.getWeekNumber(date);
+        if (this.cache.week == null) {
+            this.restoreFromCache();
+        }
         if (this.cache.week != week) {
             this.cache.week = week;
             this.cache.extra = this.extra;
@@ -128,6 +159,8 @@ export default {
                 6: this.points,
                 7: this.points
             };
+
+            this.storeToCache();
         }
     },
     selectedDate: function() {
