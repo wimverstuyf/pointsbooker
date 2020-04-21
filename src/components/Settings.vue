@@ -9,7 +9,7 @@
       <input type="number" class="input" v-model="extra"/>
     </div>
     <div class="input-wrapper">
-      <label>Cheat dag</label>
+      <label>Vrije dag</label>
       <v-select class="input-dropdown" :value="cheatday"
       :options="options.cheats" @input="setCheat"></v-select>
     </div>

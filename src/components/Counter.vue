@@ -1,30 +1,41 @@
 <template>
-    <div class="counter">
-        <div class="date">
-            <div class="day">{{ dayDescription }}</div>
-            <div class="cheat" v-if="isCheatDay">VRIJE DAG</div>
-        </div>
+    <swipe class="my-swipe" v-bind:continuous="swipeOptions.continuous" v-bind:auto="swipeOptions.auto" v-bind:defaultIndex="defaultScreen" v-bind:showIndicators="swipeOptions.showIndicators">
+          <swipe-item v-for="day in days">
+            <div class="counter">
+                <div class="date">
+                    <div class="day">{{ day.description }}</div>
+                    <div class="cheat" v-if="day.isCheatDay">VRIJE DAG</div>
+                </div>
 
-        <div v-show="!isCheatDay">
-            <div class="count">
-                <label>Resterend:</label>
-                <div class="value">{{ remaining }}</div>
-            </div>
+                <div v-show="!day.isCheatDay">
+                    <div class="count">
+                        <label>Resterend:</label>
+                        <div class="value">{{ day.remaining }}</div>
+                    </div>
 
-            <div class="action">
-                <button class="submit-btn" v-on:click="addPoint">Gebruik punt</button>
-            </div>
+                    <div class="action">
+                        <button class="submit-btn" v-on:click="addPoint" v-if="day.now">Gebruik punt</button>
+                    </div>
 
-            <div class="extra">
-              Extra punten: {{ extraRemaining }}
+                    <div class="extra" v-if="day.now">
+                      Extra punten: {{ cache.extra }}
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
+          </swipe-item>
+    </swipe>
 </template>
 
 <script>
+require('vue-swipe/dist/vue-swipe.css');
+import { Swipe, SwipeItem } from 'vue-swipe';
+
 export default {
   name: "Counter",
+  components: {
+    Swipe,
+    SwipeItem
+  },
   props: {
     points: Number,
     extra: Number,
@@ -32,6 +43,11 @@ export default {
   },
   data: function() {
     return {
+        swipeOptions: {
+            continuous: false,
+            auto: 10000000,
+            showIndicators: false
+        },
         update_count: 0,
         current_day: -1,
         cache: {
@@ -51,11 +67,6 @@ export default {
         this.buildCache(date);
         return this.cache.days[this.getWeekDay(date)];
     },
-    extraRemaining: function() {
-        this.update_count; // to trigger update
-        this.buildCache(this.selectedDate());
-        return this.cache.extra;
-    },
     dayDescription: function() {
         var day = this.getWeekDay(this.selectedDate());
         if (day == this.getWeekDay(new Date())) {
@@ -64,9 +75,31 @@ export default {
             return this.options.days[day-1];
         }
     },
-    isCheatDay: function() {
-        return this.getWeekDay(new Date()) == this.cheat;
+    defaultScreen: function() {
+        if (this.current_day == -1) {
+            return this.getWeekDay(new Date())-1;
+        } else {
+            return this.current_day-1;
+        }
     },
+    days: function() {
+        this.update_count; // to trigger update
+        this.buildCache(new Date());
+
+        var today = this.getWeekDay(new Date());
+
+        var result = {};
+        for(let day=1; day<=today; day++) {
+            result[day] = {
+                description: today==day?"Vandaag":this.options.days[day-1],
+                now: today==day,
+                isCheatDay: this.cheat==day,
+                remaining: this.cache.days[day],
+            };
+        }
+
+        return result;
+    }
   },
   methods: {
     addPoint: function() {
