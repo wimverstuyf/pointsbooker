@@ -2,7 +2,11 @@
     <swipe class="my-swipe" v-bind:continuous="swipeOptions.continuous" v-bind:auto="swipeOptions.auto" v-bind:defaultIndex="defaultScreen" v-bind:showIndicators="swipeOptions.showIndicators">
           <swipe-item>
               <div class="counter">
+                <br/>
                 <button class="submit-btn submit-reset" v-on:click="clearAll">Wis alle gegevens !</button>
+
+                <br/><br/><br/>
+                <button class="submit-btn" v-on:click="reload">Herladen</button>
               </div>
           </swipe-item>
           <swipe-item v-for="day in days">
@@ -53,6 +57,7 @@ export default {
             auto: 10000000,
             showIndicators: false
         },
+        timer: null,
         update_count: 0,
         current_day: -1,
         cache: {
@@ -64,6 +69,11 @@ export default {
             days: ['Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag']
         }
     };
+  },
+  created: function() {
+    if (!this.timer) {
+        this.timer = setInterval(this.restoreFromCache, 30000);
+    }
   },
   computed: {
     remaining: function() {
@@ -111,6 +121,9 @@ export default {
         localStorage.clear();
         location.reload();
     },
+    reload: function() {
+      location.reload();
+    },
     storeToCache: function() {
         localStorage.counter_week = this.cache.week;
         localStorage.counter_extra = this.cache.extra;
@@ -123,6 +136,7 @@ export default {
         localStorage.counter_day7 = this.cache.days[7];
     },
     restoreFromCache: function() {
+        this.update_count += 1;
         if (localStorage.counter_week) {
             this.cache.week = localStorage.counter_week;
             this.cache.extra = localStorage.counter_extra*1;

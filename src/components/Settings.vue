@@ -11,7 +11,7 @@
     <div class="input-wrapper">
       <label>Vrije dag</label>
       <v-select class="input-dropdown" :value="cheatday"
-      :options="options.cheats" @input="setCheat"></v-select>
+      :options="options.cheats" @input="setCheat" :searchable="false" :clearable=false></v-select>
     </div>
     <div class="input-wrapper">
       <button class="submit-btn" v-on:click="$emit('save', {points: points, extra: extra, cheat: cheat})">Beginnen</button>
