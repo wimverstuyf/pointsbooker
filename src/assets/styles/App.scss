@@ -39,11 +39,10 @@ h2 {
   user-select: none;
   border-radius: 3px;
   border: 1px solid transparent;
+}
 
-  &:disabled {
-    background: $darkShades;
-    opacity: 0.65;
-  }
+.submit-btn.submit-reset {
+  background-color: $warning;
 }
 
 #app {

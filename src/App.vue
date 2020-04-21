@@ -60,13 +60,13 @@ export default {
   },
   mounted() {
     if (localStorage.settings_pointsPerDay) {
-      this.settings.pointsPerDay = localStorage.settings_pointsPerDay;
+      this.settings.pointsPerDay = localStorage.settings_pointsPerDay*1;
     }
     if (localStorage.settings_extraPoints) {
-      this.settings.extraPoints = localStorage.settings_extraPoints;
+      this.settings.extraPoints = localStorage.settings_extraPoints*1;
     }
     if (localStorage.settings_cheatDay) {
-      this.settings.cheatDay = localStorage.settings_cheatDay;
+      this.settings.cheatDay = localStorage.settings_cheatDay*1;
     }
     if (localStorage.settings_show) {
       this.settings.show = localStorage.settings_show == 'yes';

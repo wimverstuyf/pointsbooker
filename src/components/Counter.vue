@@ -1,5 +1,10 @@
 <template>
     <swipe class="my-swipe" v-bind:continuous="swipeOptions.continuous" v-bind:auto="swipeOptions.auto" v-bind:defaultIndex="defaultScreen" v-bind:showIndicators="swipeOptions.showIndicators">
+          <swipe-item>
+              <div class="counter">
+                <button class="submit-btn submit-reset" v-on:click="clearAll">Wis alle gegevens !</button>
+              </div>
+          </swipe-item>
           <swipe-item v-for="day in days">
             <div class="counter">
                 <div class="date">
@@ -77,9 +82,9 @@ export default {
     },
     defaultScreen: function() {
         if (this.current_day == -1) {
-            return this.getWeekDay(new Date())-1;
+            return this.getWeekDay(new Date());
         } else {
-            return this.current_day-1;
+            return this.current_day;
         }
     },
     days: function() {
@@ -102,6 +107,10 @@ export default {
     }
   },
   methods: {
+    clearAll: function() {
+        localStorage.clear();
+        location.reload();
+    },
     storeToCache: function() {
         localStorage.counter_week = this.cache.week;
         localStorage.counter_extra = this.cache.extra;
@@ -116,15 +125,15 @@ export default {
     restoreFromCache: function() {
         if (localStorage.counter_week) {
             this.cache.week = localStorage.counter_week;
-            this.cache.extra = localStorage.counter_extra;
+            this.cache.extra = localStorage.counter_extra*1;
             this.cache.days = {
-                1: localStorage.counter_day1,
-                2: localStorage.counter_day2,
-                3: localStorage.counter_day3,
-                4: localStorage.counter_day4,
-                5: localStorage.counter_day5,
-                6: localStorage.counter_day6,
-                7: localStorage.counter_day7
+                1: localStorage.counter_day1*1,
+                2: localStorage.counter_day2*1,
+                3: localStorage.counter_day3*1,
+                4: localStorage.counter_day4*1,
+                5: localStorage.counter_day5*1,
+                6: localStorage.counter_day6*1,
+                7: localStorage.counter_day7*1
             };
         }
     },
